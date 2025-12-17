@@ -6,15 +6,21 @@ Feature: Configurar produto
     Background:
         Given que estou na página de configuração de produto
 
-    Scenario: Seleções obrigatórias
-        When eu seleciono cor, tamanho e quantidade
+    Scenario: Configuração válida permite prosseguir
+        When eu seleciono uma cor, um tamanho e uma quantidade entre 1 e 10
         Then o sistema deve permitir prosseguir para o carrinho
 
+    Scenario: Seleções obrigatórias bloqueiam avanço
+        When eu deixo de selecionar cor, tamanho ou quantidade
+        Then o sistema deve impedir prosseguir para o carrinho
+        And deve exibir uma mensagem indicando os campos obrigatórios
+
     Scenario: Limite de quantidade por venda
-        When eu seleciono 11 produtos
+        When eu seleciono uma quantidade maior que 10
         Then o sistema deve exibir uma mensagem de erro
         And não deve permitir adicionar ao carrinho
 
-    Scenario: Botão limpar
+    Scenario: Botão limpar restaura estado original
         When eu clico no botão "limpar"
         Then o sistema deve retornar ao estado original
+        And deve remover cor, tamanho e quantidade selecionados
